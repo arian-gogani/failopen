@@ -65,6 +65,24 @@ comparison in the direction that matters. Type annotations do not stop it: the
 value arrives from `json.loads` or from a model, so `Literal["allow","deny"]`
 documents an intent nothing enforces at runtime.
 
+## How common is it
+
+Four measurements, in [MEASUREMENT.md](MEASUREMENT.md), with the limits of each
+stated:
+
+- **0 findings in 1,128,865 lines** of mature reviewed Python (certbot, bandit,
+  pyjwt, sigstore-python, python-tuf, detect-secrets)
+- **9 findings in 22 projects** whose enforcement code is roughly eighteen
+  months old or less
+- **absent from CWE**: none of CWE-693's 18 child weaknesses describes a
+  mechanism that executes, reports success, and never evaluates
+- **absent from the agentic taxonomies**: zero matches across AVE's 81
+  behavioral classes, and not among the four gaps CSA named in March 2026
+
+Together those say this is a defect of young enforcement code rather than of
+software generally, and that it currently has no identifier for a maintainer to
+point at or a scanner to map a rule to.
+
 ## Where it is not
 
 Thirteen repositories were read and found clean. They are listed because a
