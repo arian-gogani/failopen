@@ -35,6 +35,7 @@ No dependencies. Python 3.9 or later.
 | `guardrails-onfail` | guardrails-ai | the config path defaults to doing nothing, the Python API defaults to raising |
 | `autogen-verdict` | microsoft/autogen | a governance sample executes on any verdict it does not recognise |
 | `autogpt-server-noperm` | Significant-Gravitas/AutoGPT | the network-facing server builds an agent with no permission manager, and the check silently skips |
+| `rebuff-llm-tactic` | protectai/rebuff | an unparseable model completion silently scores as not-detected |
 
 ```
 python3 run.py --all
@@ -46,7 +47,7 @@ structure exactly and run offline.
 
 ## The shape
 
-All six are one defect wearing different clothes. Something compares a value
+All seven are one defect wearing different clothes. Something compares a value
 it does not control against a literal, and the branch for "did not match" is
 the permissive one.
 
@@ -73,7 +74,7 @@ stated:
 
 - **0 findings in 1,128,865 lines** of mature reviewed Python (certbot, bandit,
   pyjwt, sigstore-python, python-tuf, detect-secrets)
-- **10 findings in 27 projects** whose enforcement code is roughly eighteen
+- **14 findings in 36 projects** whose enforcement code is roughly eighteen
   months old or less
 - **absent from CWE**: none of CWE-693's 18 child weaknesses describes a
   mechanism that executes, reports success, and never evaluates
@@ -86,13 +87,14 @@ point at or a scanner to map a rule to.
 
 ## Where it is not
 
-Seventeen repositories were read and found clean. They are listed because a
+Twenty-two repositories were read and found clean. They are listed because a
 sweep that finds a defect everywhere it looks is measuring the sweeper.
 
 langchain, langgraph, crewAI, letta-code, braintrust autoevals, Arize phoenix,
 comet opik, langfuse, the MCP filesystem server, the MCP Python SDK, mcp-agent,
 block/goose, NVIDIA SkillSpector, microsoft/semantic-kernel, run-llama/llama_index,
-pydantic-ai, deepset-ai/haystack.
+pydantic-ai, deepset-ai/haystack, NVIDIA-NeMo/NeMo-Guardrails, ag2ai/ag2,
+microsoft/presidio, browser-use/browser-use, griptape-ai/griptape.
 
 Three of those parse LLM judge output, which is deepeval's exact job. Opik has
 one strict parser shared by all ten of its metrics. Autoevals constrains the
@@ -107,18 +109,19 @@ So this is not a claim that LLM tooling is careless. Most of it gets this right.
 
 ## Reporting
 
-Every case but one was reported upstream before it was published, through the
-project's own channel where one exists. Two further findings are with vendors
-under private disclosure and are not here.
+Every case but two was reported upstream before it was published, through the
+project's own channel where one exists. Three further findings are with
+vendors under private disclosure and are not here.
 
-The exception is `autogpt-server-noperm`. AutoGPT's SECURITY.md states that
-code under `classic/` is explicitly out of scope for security reports,
-because that directory is unsupported and superseded by the AutoGPT
-Platform. There was no channel to report it through. It is published because
-it is a real, reproduced instance of the pattern in a widely cloned
-repository, not because anyone has been notified or is expected to fix it.
-If you run `classic/`'s Agent Protocol server, the fix is yours to make: pass
-a `CommandPermissionManager` into `create_agent()` at the call site in
+The two exceptions are `autogpt-server-noperm` and `rebuff-llm-tactic`.
+AutoGPT's SECURITY.md states that code under `classic/` is explicitly out of
+scope for security reports, because that directory is unsupported and
+superseded by the AutoGPT Platform. Rebuff has been archived since 2024 and
+never had a SECURITY.md. Neither had a channel to report through. Both are
+published because they are real, reproduced instances of the pattern, not
+because anyone has been notified or is expected to fix them. If you run
+`classic/`'s Agent Protocol server, the fix is yours to make: pass a
+`CommandPermissionManager` into `create_agent()` at the call site in
 `agent_protocol_server.py`, the same way the CLI entry point already does.
 
 ## On being wrong

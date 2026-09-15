@@ -30,30 +30,34 @@ subsequently read. The detector was also run with a corpus of known-positive
 cases planted inside an 802K-line repository and surfaced all of them, so the
 walk reaches files at scale.
 
-## 2. Young enforcement code: 10 findings in 27 projects
+## 2. Young enforcement code: 14 findings in 36 projects
 
 Same defect class, found by reading rather than by the detector, in projects
 whose enforcement code was written in roughly the last eighteen months.
 
 Confirmed, each with a reproduction run against the shipped package:
 litellm (two separate guardrails), deepeval, guardrails-ai,
-openai-agents-python, microsoft/autogen, stacklok/toolhive, and two more under
-private disclosure at the time of writing.
+openai-agents-python, microsoft/autogen, stacklok/toolhive, and five more
+under private disclosure at the time of writing.
 
-One further confirmed instance, AutoGPT's `classic/` Agent Protocol server,
-is not counted as a disclosure: the maintainers' own SECURITY.md lists that
-directory as explicitly out of scope ("unsupported... avoid use of deprecated
-components"), so there was nothing to report. It is included in the count
-because it is a real, reproduced instance of the pattern, in a 187k-star repo,
-not because it was ever actionable as a vulnerability report.
+Two further confirmed instances are not counted as disclosures, because
+neither project left a channel to report through. AutoGPT's `classic/` Agent
+Protocol server: the maintainers' own SECURITY.md lists that directory as
+explicitly out of scope ("unsupported... avoid use of deprecated
+components"). Rebuff's LLM detection tactic: the repository has been
+archived since 2024 and never had a SECURITY.md. Both are included in the
+count because they are real, reproduced instances of the pattern, not
+because either was ever actionable as a vulnerability report.
 
 Read and found clean, listed because a survey that finds a defect everywhere it
 looks is measuring the surveyor: langchain, langgraph, crewAI, letta-code,
 braintrust autoevals, Arize phoenix, comet opik, langfuse, the MCP filesystem
 server, the MCP Python SDK, mcp-agent, block/goose, NVIDIA SkillSpector,
-microsoft/semantic-kernel, run-llama/llama_index, pydantic-ai, deepset-ai/haystack.
+microsoft/semantic-kernel, run-llama/llama_index, pydantic-ai, deepset-ai/haystack,
+NVIDIA-NeMo/NeMo-Guardrails, ag2ai/ag2, microsoft/presidio, browser-use/browser-use,
+griptape-ai/griptape.
 
-Seventeen clean, ten with findings.
+Twenty-two clean, fourteen with findings.
 
 ## 3. Absent from CWE
 
@@ -97,22 +101,23 @@ scanner vendor who wants to detect it has nothing to map a rule to.
 
 ## What they do not support
 
-That the class is dangerous in every instance. Several of the nine require a
-specific configuration, and two are in sample code rather than shipped
+That the class is dangerous in every instance. Several of the fourteen require
+a specific configuration, and two are in sample code rather than shipped
 libraries.
 
-That the 27-project sample is representative. It was selected for having
-enforcement code worth reading, not at random, so the 10-in-27 rate is an
+That the 36-project sample is representative. It was selected for having
+enforcement code worth reading, not at random, so the 14-in-36 rate is an
 observation about a chosen sample and not a population estimate.
 
-That the detector in measurement 1 would have found all ten. It would not.
-It detects one shape of several, which is why the young-code findings came from
-reading. The zero in measurement 1 bounds that one shape only.
+That the detector in measurement 1 would have found all fourteen. It would
+not. It detects one shape of several, which is why the young-code findings
+came from reading. The zero in measurement 1 bounds that one shape only.
 
-That every finding was actionable. One of the ten, AutoGPT's classic/ server
-path, is in code the maintainers have already declared unsupported and out of
-scope for security reports. It demonstrates the pattern; it does not represent
-a live risk anyone is going to patch.
+That every finding was actionable. Two of the fourteen are in code with no
+live disclosure path: one maintainer has already declared the affected
+directory unsupported, and one project has been archived with no security
+policy. Both demonstrate the pattern; neither represents a live risk anyone
+is going to patch.
 
 ## Reproducing the measurements
 
