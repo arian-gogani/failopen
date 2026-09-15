@@ -30,7 +30,7 @@ subsequently read. The detector was also run with a corpus of known-positive
 cases planted inside an 802K-line repository and surfaced all of them, so the
 walk reaches files at scale.
 
-## 2. Young enforcement code: 10 findings in 26 projects
+## 2. Young enforcement code: 10 findings in 27 projects
 
 Same defect class, found by reading rather than by the detector, in projects
 whose enforcement code was written in roughly the last eighteen months.
@@ -51,9 +51,9 @@ Read and found clean, listed because a survey that finds a defect everywhere it
 looks is measuring the surveyor: langchain, langgraph, crewAI, letta-code,
 braintrust autoevals, Arize phoenix, comet opik, langfuse, the MCP filesystem
 server, the MCP Python SDK, mcp-agent, block/goose, NVIDIA SkillSpector,
-microsoft/semantic-kernel, run-llama/llama_index, pydantic-ai.
+microsoft/semantic-kernel, run-llama/llama_index, pydantic-ai, deepset-ai/haystack.
 
-Sixteen clean, ten with findings.
+Seventeen clean, ten with findings.
 
 ## 3. Absent from CWE
 
@@ -101,8 +101,8 @@ That the class is dangerous in every instance. Several of the nine require a
 specific configuration, and two are in sample code rather than shipped
 libraries.
 
-That the 26-project sample is representative. It was selected for having
-enforcement code worth reading, not at random, so the 10-in-26 rate is an
+That the 27-project sample is representative. It was selected for having
+enforcement code worth reading, not at random, so the 10-in-27 rate is an
 observation about a chosen sample and not a population estimate.
 
 That the detector in measurement 1 would have found all ten. It would not.

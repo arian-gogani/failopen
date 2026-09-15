@@ -73,7 +73,7 @@ stated:
 
 - **0 findings in 1,128,865 lines** of mature reviewed Python (certbot, bandit,
   pyjwt, sigstore-python, python-tuf, detect-secrets)
-- **10 findings in 26 projects** whose enforcement code is roughly eighteen
+- **10 findings in 27 projects** whose enforcement code is roughly eighteen
   months old or less
 - **absent from CWE**: none of CWE-693's 18 child weaknesses describes a
   mechanism that executes, reports success, and never evaluates
@@ -86,13 +86,13 @@ point at or a scanner to map a rule to.
 
 ## Where it is not
 
-Sixteen repositories were read and found clean. They are listed because a
+Seventeen repositories were read and found clean. They are listed because a
 sweep that finds a defect everywhere it looks is measuring the sweeper.
 
 langchain, langgraph, crewAI, letta-code, braintrust autoevals, Arize phoenix,
 comet opik, langfuse, the MCP filesystem server, the MCP Python SDK, mcp-agent,
 block/goose, NVIDIA SkillSpector, microsoft/semantic-kernel, run-llama/llama_index,
-pydantic-ai.
+pydantic-ai, deepset-ai/haystack.
 
 Three of those parse LLM judge output, which is deepeval's exact job. Opik has
 one strict parser shared by all ten of its metrics. Autoevals constrains the
