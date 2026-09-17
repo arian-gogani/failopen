@@ -71,6 +71,49 @@ distinction has no name.
   raise it explicitly because I invited this comparison myself and it is
   the most likely place a reviewer would try to file this.
 
+## The nearest prior art: CWE-636
+
+CWE-636, Not Failing Securely ('Failing Open'), ChildOf CWE-657 and
+CWE-755, is the closest existing entry and the first thing a reviewer will
+raise. It is also, embarrassingly, the entry whose common name matches the
+name of the repository this proposal lives in, and I did not check it until
+after drafting. Recording that because it bears on how much weight to give
+the rest of my search.
+
+It does not absorb the class, and the reason is a single word in its
+description: "When a product **encounters an error**, it falls back to a
+state that is less secure." 636 is about degradation under failure. Both its
+parents are consistent with that, 755 being Improper Handling of Exceptional
+Conditions.
+
+Of the five forms below, only Form 4 involves an error at all. In Forms 1, 2,
+3 and 5 nothing goes wrong:
+
+- an `elif` bound to the wrong `if` is unreachable on a perfectly healthy
+  request
+- a verdict compared against a literal it cannot match returns a clean,
+  successful-looking result
+- `all([])` over a legitimately empty collection is not an error condition,
+  it is an ordinary one
+
+That distinction is not pedantry, it is the entire reason this class is hard
+to find. A mechanism that fails open **on error** leaves an error behind:
+a log line, an exception, a metric, something an operator can alert on.
+A mechanism that reports success **when nothing went wrong** leaves no trace
+at all. That is why these survive review, tests, coverage and monitoring
+simultaneously, and it is the part 636 does not describe.
+
+So the sharpest version of the claim is narrower than "fail-open," which is
+the term I have been using loosely and should probably stop using in this
+context:
+
+> 636 covers a protection mechanism that becomes permissive because something
+> failed. What has no entry is a protection mechanism that reports success
+> because nothing was evaluated, with no failure anywhere.
+
+Form 4 belongs to 636 and 390 jointly and should be mapped there, not
+claimed. I would rather the group hear that from me than find it.
+
 ## Prior art found on re-check, and how it narrows the class
 
 I originally scoped this against CWE-693's children plus 697, 184 and 1288.
@@ -79,10 +122,11 @@ some of the five forms below. Recording the result rather than the
 conclusion I wanted:
 
 - **Form 4 is substantially CWE-390** (Detection of Error Condition Without
-  Action, ChildOf CWE-755). An `except` that logs and returns, leaving the
-  caller to read a permissive default, is what 390 describes. Two of the
-  confirmed instances are textbook 390 and should be mapped there rather
-  than counted as novel.
+  Action, ChildOf CWE-755) **and CWE-636** (see above). An `except` that logs
+  and returns, leaving the caller to read a permissive default, is what 390
+  describes, and the resulting permissive degradation is what 636 describes.
+  Two of the confirmed instances are textbook cases and should be mapped to
+  those rather than counted as novel.
 - **Form 2 may simply be CWE-697** (Incorrect Comparison). In this form the
   comparison does execute; it just cannot match, because the value's
   runtime domain is wider than the literal it is tested against. Calling
