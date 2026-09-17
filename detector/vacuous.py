@@ -11,8 +11,12 @@ distinguishing "checked and passed" from "nothing was checked".
 
 This checks one shape. It is the shape that, of the five recorded in
 CWE-PROPOSAL.md, has no existing CWE entry and is mechanically detectable.
-The other four are better served by CWE-390, CWE-697 and CWE-561, and by
-reading.
+The other four are better served by CWE-636, CWE-390, CWE-697 and CWE-561,
+and by reading.
+
+Note it is not the "fail-open on error" case. CWE-636 already covers a
+mechanism that degrades when something fails. An empty collection is not a
+failure, which is why this one leaves no error behind to alert on.
 
 Two report classes, kept separate on purpose:
 
