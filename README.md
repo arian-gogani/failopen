@@ -85,6 +85,26 @@ Together those say this is a defect of young enforcement code rather than of
 software generally, and that it currently has no identifier for a maintainer to
 point at or a scanner to map a rule to.
 
+## Checking your own code
+
+```
+python3 detector/vacuous.py path/to/your/code
+```
+
+[detector/](detector/) finds security verdicts computed by `all()` or `any()`
+over a collection that can be empty, because `all([])` is `True` and a
+verdict aggregated that way reports success having inspected nothing.
+
+It covers one of the five forms below, the only one with no existing CWE
+entry and the only one a static pass decides well. It reports EMPTIABLE and
+INDETERMINATE as separate classes and will not merge them, because calling an
+undecided question a pass is the defect this repository is about.
+
+Measured against 1,868 files of the Python 3.14 standard library: zero
+emptiable, eight indeterminate. It reports both real sites of the llm-guard
+finding. Limits, including the two false positives found and fixed while
+building it, are in [detector/README.md](detector/README.md).
+
 ## Giving it an identifier
 
 [CWE-PROPOSAL.md](CWE-PROPOSAL.md) is a draft entry for this class, written
