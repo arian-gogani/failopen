@@ -65,6 +65,59 @@ distinction has no name.
 - **Not CWE-1288** (Improper Validation of Consistency within Input).
   1288 concerns consistency between input elements, not a comparison that
   fails to evaluate.
+- **Not CWE-754** (Improper Check for Unusual or Exceptional Conditions).
+  754 covers checks that are missing or that fail to consider a condition.
+  This class covers a check that is present, configured and executing. I
+  raise it explicitly because I invited this comparison myself and it is
+  the most likely place a reviewer would try to file this.
+
+## Prior art found on re-check, and how it narrows the class
+
+I originally scoped this against CWE-693's children plus 697, 184 and 1288.
+That was too narrow a search, and a broader pass found existing homes for
+some of the five forms below. Recording the result rather than the
+conclusion I wanted:
+
+- **Form 4 is substantially CWE-390** (Detection of Error Condition Without
+  Action, ChildOf CWE-755). An `except` that logs and returns, leaving the
+  caller to read a permissive default, is what 390 describes. Two of the
+  confirmed instances are textbook 390 and should be mapped there rather
+  than counted as novel.
+- **Form 2 may simply be CWE-697** (Incorrect Comparison). In this form the
+  comparison does execute; it just cannot match, because the value's
+  runtime domain is wider than the literal it is tested against. Calling
+  that "never evaluated" overstates it. I now think 697 is the honest
+  mapping and that the interesting part is a documentation note about
+  unconstrained values from deserializers and model output, not a new
+  entry.
+- **Form 1 overlaps CWE-561** (Dead Code) at the mechanism level. An `elif`
+  made unreachable by its enclosing conditional is dead code. 561 does not
+  carry the security consequence, but the mechanism is not novel.
+
+What survives as genuinely unmapped is narrower than the original framing:
+the cases where nothing is evaluated at all and the mechanism still returns
+the permissive result. Form 1 and Form 5 are the clearest, Form 5 most of
+all, since `all([])` returning `True` means the aggregate reports success
+having inspected nothing, and no existing entry I found names a vacuously
+satisfied security aggregate.
+
+So there are two defensible readings and I do not think the choice is mine:
+
+1. **Five mappings, not one entry.** Forms 1 through 4 map to 561, 697, an
+   inconsistency pattern, and 390 respectively, and only Form 5 needs new
+   content. This is the conservative reading and it may be correct.
+2. **One entry organized by consequence.** What the five share is not a
+   mechanism but an outcome: a protection mechanism affirmatively reports
+   that enforcement occurred when it did not, which is why it survives
+   review, tests, coverage and monitoring. 697, 390 and 561 are all
+   mechanism-level entries and none of them carries that consequence. CWE
+   does have entries organized around consequence, so this reading is
+   available, but it is a harder case to make and it should be made by
+   someone with submission experience rather than asserted by me.
+
+I lean toward reading 2 and I am aware that is the reading which favours my
+own candidate, which is a reason to discount my lean rather than to trust
+it.
 
 ## Applicable platforms
 
