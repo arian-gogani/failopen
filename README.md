@@ -85,6 +85,16 @@ Together those say this is a defect of young enforcement code rather than of
 software generally, and that it currently has no identifier for a maintainer to
 point at or a scanner to map a rule to.
 
+## Giving it an identifier
+
+[CWE-PROPOSAL.md](CWE-PROPOSAL.md) is a draft entry for this class, written
+for discussion in the CWE AI Working Group rather than submitted. It lists
+the five structural forms the confirmed instances take, the boundary against
+CWE-697 and CWE-184, what static analysis can and cannot detect, and the
+part that is currently weakest: there is one credited advisory to cite, and
+four instances were filed as public issues before I understood that this
+forfeits the credited-instance trail such an entry wants.
+
 ## Where it is not
 
 Twenty-two repositories were read and found clean. They are listed because a
