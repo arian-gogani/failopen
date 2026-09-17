@@ -66,6 +66,33 @@ caller-supplied `scanners_suppress` can empty that list.
 So on this finding the tool does the useful half, pointing at the line and
 naming the question, and leaves the answer to a person.
 
+## Yield so far
+
+Run across four guardrail and evaluation products, 2,873 Python files:
+
+```
+guardrails-ai/guardrails        354 files    0 emptiable, 0 indeterminate
+confident-ai/deepeval          1076 files    0 emptiable, 1 indeterminate
+NVIDIA-NeMo/NeMo-Guardrails     938 files    0 emptiable, 8 indeterminate
+microsoft/presidio              505 files    0 emptiable, 0 indeterminate
+```
+
+Zero EMPTIABLE across all four. Nine pointers.
+
+I read all nine. Seven are ordinary control flow that happens to use `any()`,
+one is a module-level constant that cannot be empty, and **one is a real
+defect**: a guardrail verdict function that returns "passed" when its
+upstream API returns an empty result set, under that integration's default
+strategy, with the outcome recorded as a successful check. It is with the
+vendor under coordinated disclosure and is not named here or included in the
+reproductions until they have responded.
+
+That ratio is the honest pitch for this tool, and it is deliberately not
+"it finds bugs". It found nothing it could confirm by itself. What it did was
+turn 2,873 files into nine lines worth reading, one of which was worth
+reporting. A checker that claimed the other eight were bugs would have been
+useless; a checker that stayed silent would have missed the ninth.
+
 ## What it does not do
 
 It does not do cross-file analysis, so the most realistic version of this
