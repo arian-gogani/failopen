@@ -1,6 +1,6 @@
 # How common is this, actually
 
-The reproductions in this repository show five products failing open. That
+The reproductions in this repository show seven products failing open. That
 says nothing about whether the failure is rare or everywhere. This file is the
 attempt to bound it, because a defect class with no prevalence estimate is an
 anecdote.
@@ -30,15 +30,17 @@ subsequently read. The detector was also run with a corpus of known-positive
 cases planted inside an 802K-line repository and surfaced all of them, so the
 walk reaches files at scale.
 
-## 2. Young enforcement code: 14 findings in 36 projects
+## 2. Young enforcement code: 15 findings in 36 projects
 
 Same defect class, found by reading rather than by the detector, in projects
 whose enforcement code was written in roughly the last eighteen months.
 
 Confirmed, each with a reproduction run against the shipped package:
 litellm (two separate guardrails), deepeval, guardrails-ai,
-openai-agents-python, microsoft/autogen, stacklok/toolhive, and five more
-under private disclosure at the time of writing.
+openai-agents-python, microsoft/autogen, stacklok/toolhive, and six more
+under private disclosure at the time of writing. One of those six was
+found by the checker in detector/ rather than by reading, and moved a
+project out of the clean list above after it had been listed there.
 
 Two further confirmed instances are not counted as disclosures, because
 neither project left a channel to report through. AutoGPT's `classic/` Agent
@@ -54,10 +56,10 @@ looks is measuring the surveyor: langchain, langgraph, crewAI, letta-code,
 braintrust autoevals, Arize phoenix, comet opik, langfuse, the MCP filesystem
 server, the MCP Python SDK, mcp-agent, block/goose, NVIDIA SkillSpector,
 microsoft/semantic-kernel, run-llama/llama_index, pydantic-ai, deepset-ai/haystack,
-NVIDIA-NeMo/NeMo-Guardrails, ag2ai/ag2, microsoft/presidio, browser-use/browser-use,
+ag2ai/ag2, microsoft/presidio, browser-use/browser-use,
 griptape-ai/griptape.
 
-Twenty-two clean, fourteen with findings.
+Twenty-one clean, fifteen with findings.
 
 ## 3. Absent from CWE
 
@@ -101,19 +103,19 @@ scanner vendor who wants to detect it has nothing to map a rule to.
 
 ## What they do not support
 
-That the class is dangerous in every instance. Several of the fourteen require
+That the class is dangerous in every instance. Several of the fifteen require
 a specific configuration, and two are in sample code rather than shipped
 libraries.
 
 That the 36-project sample is representative. It was selected for having
-enforcement code worth reading, not at random, so the 14-in-36 rate is an
+enforcement code worth reading, not at random, so the 15-in-36 rate is an
 observation about a chosen sample and not a population estimate.
 
-That the detector in measurement 1 would have found all fourteen. It would
+That the detector in measurement 1 would have found all fifteen. It would
 not. It detects one shape of several, which is why the young-code findings
 came from reading. The zero in measurement 1 bounds that one shape only.
 
-That every finding was actionable. Two of the fourteen are in code with no
+That every finding was actionable. Two of the fifteen are in code with no
 live disclosure path: one maintainer has already declared the affected
 directory unsupported, and one project has been archived with no security
 policy. Both demonstrate the pattern; neither represents a live risk anyone
@@ -127,8 +129,14 @@ directory of github.com/aveproject/ave for the 81 classes.
 
 Measurement 2 is this repository plus the clean list above.
 
-Measurement 1 is the one requiring trust, because the detector is not published
-here. It found nothing, which is the least interesting possible result to
-publish, and a tool with no demonstrated yield is not worth anyone installing.
-The number is stated so the claim in measurement 2 has a denominator, not as a
-product announcement.
+Measurement 1 is the one requiring trust, because the detector behind it is
+not published. It looks for a different shape from the checker in detector/:
+a security check whose result is computed and then never read. It found
+nothing, which is the least interesting possible result to publish, and the
+number is stated so the claim in measurement 2 has a denominator rather than
+as a product announcement.
+
+The checker that is published, detector/, covers the vacuous-aggregate shape
+instead, and its own yield is recorded in detector/README.md. The two should
+not be confused: neither would have found most of what the other does, and
+neither found most of the fifteen, which came from reading.

@@ -74,7 +74,7 @@ stated:
 
 - **0 findings in 1,128,865 lines** of mature reviewed Python (certbot, bandit,
   pyjwt, sigstore-python, python-tuf, detect-secrets)
-- **14 findings in 36 projects** whose enforcement code is roughly eighteen
+- **15 findings in 36 projects** whose enforcement code is roughly eighteen
   months old or less
 - **absent from CWE**: none of CWE-693's 18 child weaknesses describes a
   mechanism that executes, reports success, and never evaluates
@@ -117,13 +117,13 @@ forfeits the credited-instance trail such an entry wants.
 
 ## Where it is not
 
-Twenty-two repositories were read and found clean. They are listed because a
+Twenty-one repositories were read and found clean. They are listed because a
 sweep that finds a defect everywhere it looks is measuring the sweeper.
 
 langchain, langgraph, crewAI, letta-code, braintrust autoevals, Arize phoenix,
 comet opik, langfuse, the MCP filesystem server, the MCP Python SDK, mcp-agent,
 block/goose, NVIDIA SkillSpector, microsoft/semantic-kernel, run-llama/llama_index,
-pydantic-ai, deepset-ai/haystack, NVIDIA-NeMo/NeMo-Guardrails, ag2ai/ag2,
+pydantic-ai, deepset-ai/haystack, ag2ai/ag2,
 microsoft/presidio, browser-use/browser-use, griptape-ai/griptape.
 
 Three of those parse LLM judge output, which is deepeval's exact job. Opik has
@@ -140,7 +140,7 @@ So this is not a claim that LLM tooling is careless. Most of it gets this right.
 ## Reporting
 
 Every case but two was reported upstream before it was published, through the
-project's own channel where one exists. Three further findings are with
+project's own channel where one exists. Six further findings are with
 vendors under private disclosure and are not here.
 
 The two exceptions are `autogpt-server-noperm` and `rebuff-llm-tactic`.

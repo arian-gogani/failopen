@@ -71,13 +71,13 @@ naming the question, and leaves the answer to a person.
 Run across four guardrail and evaluation products, 2,873 Python files:
 
 ```
-guardrails-ai/guardrails        354 files    0 emptiable, 0 indeterminate
-confident-ai/deepeval          1076 files    0 emptiable, 1 indeterminate
-NVIDIA-NeMo/NeMo-Guardrails     938 files    0 emptiable, 8 indeterminate
-microsoft/presidio              505 files    0 emptiable, 0 indeterminate
+4 products, 2,873 files    0 emptiable, 9 indeterminate
 ```
 
-Zero EMPTIABLE across all four. Nine pointers.
+Zero EMPTIABLE across all four. Nine pointers. The per-product split is
+withheld for now because one finding is under coordinated disclosure and
+publishing the counts would narrow it to two candidates. It goes in when the
+vendor has responded.
 
 I read all nine. Seven are ordinary control flow that happens to use `any()`,
 one is a module-level constant that cannot be empty, and **one is a real
