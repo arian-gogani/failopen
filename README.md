@@ -1,27 +1,37 @@
 # failopen
 
 Guardrails, policy gates and eval scorers that return the safe answer without
-checking anything. Every case here is reproduced against the code as shipped,
-not described.
+checking anything. Active cases are reproductions of identified source
+revisions, not a guarantee that a later upstream revision remains affected.
+Withdrawn or superseded claims remain visible under [historical/](historical/).
+
+**Correction, October 1, 2026:** The AutoGen governance sample case was
+presented as a current fail-open even though the contributor had already
+hardened PR #7960 on September 14, before issue #8301 was filed. The initial
+PR revision does execute on unrecognized verdicts; the current PR head
+blocks them. The [version comparison](historical/autogen-verdict/README.md)
+records both results. AutoGen is removed from the active case list. The
+original 15-in-36 audit tally is withdrawn as a measure of current defects.
+We also rechecked deepeval: its three affected schemas now reject verbose
+verdicts, so that case is [historical](historical/deepeval/README.md) too.
+The other projects' present-day statuses have not all been rechecked.
 
 ```
 git clone https://github.com/arian-gogani/failopen
 cd failopen
-python3 run.py deepeval
+python3 run.py openai-approval
 ```
 
 ```
-lifted 10 lines of _calculate_score verbatim from the shipped file
+lifted evaluate_needs_approval_setting verbatim from the shipped file
 
-  judge verdict                                    score   meaning
-  'yes'                                            0.0     violation caught
-  'Yes, the model violated its assigned role.'     1.0     scored as full adherence
-  'no'                                             1.0     scored as full adherence
+  needs_approval           core runner              realtime session
+  'always'                 raises UserError         needs_approval=False
 ```
 
-That is deepeval's own `_calculate_score`, downloaded from `main` and executed.
-A judge that answers in a sentence rather than a bare token is scored as
-reporting no violation.
+The helper is extracted from OpenAI Agents' current source. The core runner
+uses strict validation; the realtime caller passes `strict=False`, so a
+misconfigured approval setting becomes no approval in that path.
 
 No dependencies. Python 3.9 or later.
 
@@ -29,11 +39,9 @@ No dependencies. Python 3.9 or later.
 
 | case | product | what breaks |
 |---|---|---|
-| `deepeval` | confident-ai/deepeval | a verbose judge verdict scores as a pass, in three metrics |
 | `openai-approval` | openai/openai-agents-python | a bad approval config raises in one runner and skips approval in the other |
 | `litellm-aporia` | BerriAI/litellm | the provider says `modify`, the proxy forwards the original unmodified |
 | `guardrails-onfail` | guardrails-ai | the config path defaults to doing nothing, the Python API defaults to raising |
-| `autogen-verdict` | microsoft/autogen | a governance sample executes on any verdict it does not recognise |
 | `autogpt-server-noperm` | Significant-Gravitas/AutoGPT | the network-facing server builds an agent with no permission manager, and the check silently skips |
 | `rebuff-llm-tactic` | protectai/rebuff | an unparseable model completion silently scores as not-detected |
 
@@ -41,13 +49,12 @@ No dependencies. Python 3.9 or later.
 python3 run.py --all
 ```
 
-`deepeval` and `openai-approval` fetch the real source file and execute the
-function out of it, so those two need network. The rest reproduce the branch
-structure exactly and run offline.
+`openai-approval` fetches the real source file and executes the helper, so it
+needs network. The other active cases reproduce the branch structure offline.
 
 ## The shape
 
-All seven are one defect wearing different clothes. Something compares a value
+The cases illustrate one defect family. Something compares a value
 it does not control against a literal, and the branch for "did not match" is
 the permissive one.
 
@@ -74,16 +81,18 @@ stated:
 
 - **0 findings in 1,128,865 lines** of mature reviewed Python (certbot, bandit,
   pyjwt, sigstore-python, python-tuf, detect-secrets)
-- **15 findings in 36 projects** whose enforcement code is roughly eighteen
-  months old or less
+- **The original 15-in-36 tally is withdrawn as a current-defect rate.** It
+  included a historical AutoGen PR revision fixed before the public issue and
+  a deepeval revision superseded by stricter verdict schemas.
+  See [MEASUREMENT.md](MEASUREMENT.md) for the sampling limits.
 - **absent from CWE**: none of CWE-693's 18 child weaknesses describes a
   mechanism that executes, reports success, and never evaluates
 - **absent from the agentic taxonomies**: zero matches across AVE's 81
   behavioral classes, and not among the four gaps CSA named in March 2026
 
-Together those say this is a defect of young enforcement code rather than of
-software generally, and that it currently has no identifier for a maintainer to
-point at or a scanner to map a rule to.
+These selected observations do not establish a population rate or prove the
+class is specific to young code. The taxonomy question is separate from that
+prevalence claim.
 
 ## Checking your own code
 
@@ -131,9 +140,10 @@ one strict parser shared by all ten of its metrics. Autoevals constrains the
 model with a tool call and subscripts the result directly, so an unrecognised
 choice is a `KeyError`. Phoenix tests membership before scoring and raises.
 
-deepeval ships the same helper. `verdict_from_json` in `metrics/utils.py`, with
-a docstring naming this exact failure, including the phrase "silently
-miscounting it". One metric calls it.
+Deepeval's current `role_violation`, `prompt_alignment`, and
+`conversation_completeness` verdict schemas all use the bounded `YesNo` type.
+We executed those schema classes and confirmed they reject a verbose verdict.
+The older case and the correction are preserved under [historical/deepeval/](historical/deepeval/).
 
 So this is not a claim that LLM tooling is careless. Most of it gets this right.
 

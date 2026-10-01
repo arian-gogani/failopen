@@ -1,9 +1,12 @@
 # How common is this, actually
 
-The reproductions in this repository show seven products failing open. That
-says nothing about whether the failure is rare or everywhere. This file is the
-attempt to bound it, because a defect class with no prevalence estimate is an
-anecdote.
+The original tally included an AutoGen PR revision that had already been
+fixed before the public issue was filed. This correction is recorded in
+[historical/autogen-verdict/](historical/autogen-verdict/). The tally below is
+an audit of selected revisions, **not an estimate of current defects or a
+population prevalence rate**. We also rechecked deepeval and found its three
+affected schemas now reject verbose verdicts. We have not rechecked every
+other upstream revision today.
 
 Four measurements, each independently checkable.
 
@@ -30,15 +33,21 @@ subsequently read. The detector was also run with a corpus of known-positive
 cases planted inside an 802K-line repository and surfaced all of them, so the
 walk reaches files at scale.
 
-## 2. Young enforcement code: 15 findings in 36 projects
+## 2. Young enforcement code: original 15-in-36 current-rate claim withdrawn
 
 Same defect class, found by reading rather than by the detector, in projects
 whose enforcement code was written in roughly the last eighteen months.
 
-Confirmed, each with a reproduction run against the shipped package:
-litellm (two separate guardrails), deepeval, guardrails-ai,
-openai-agents-python, microsoft/autogen, stacklok/toolhive, and six more
-under private disclosure at the time of writing. One of those six was
+The original count included findings in inspected revisions of litellm
+(two separate guardrails), a now-superseded deepeval revision, guardrails-ai,
+openai-agents-python, an unmerged microsoft/autogen sample PR,
+stacklok/toolhive, and six more under private disclosure at the time of
+writing. The AutoGen initial revision failed open, but the same PR was
+hardened on September 14, before issue #8301 was filed. It was not a
+current defect in the PR head when reported. Deepeval's current three
+affected schemas use a bounded `YesNo` verdict type and reject verbose
+answers, as verified against commit `6e2a3a3048d268a46e7e08f03ac04c5f3cf25d78`.
+One of those six was
 found by the checker in detector/ rather than by reading, and moved a
 project out of the clean list above after it had been listed there.
 
@@ -59,7 +68,8 @@ microsoft/semantic-kernel, run-llama/llama_index, pydantic-ai, deepset-ai/haysta
 ag2ai/ag2, microsoft/presidio, browser-use/browser-use,
 griptape-ai/griptape.
 
-Twenty-one clean, fifteen with findings.
+The original classification was twenty-one clean and fifteen findings in
+inspected revisions. Do not quote this split as a current rate.
 
 ## 3. Absent from CWE
 
@@ -92,10 +102,10 @@ them.
 
 ## What the four measurements together support
 
-That this is a defect of young enforcement code specifically, not of software
-generally. It is reviewed out of mature codebases, and it is concentrated in
-systems whose enforcement layers were written quickly, recently, and often not
-by security engineers.
+The selected audit found examples worth testing. It cannot establish that
+the class is concentrated in young enforcement code or reviewed out of mature
+codebases. The mature-code detector scanned only one narrower shape, while
+the young-code cases were identified by reading.
 
 And that it currently has no identifier. A maintainer who wants to say "that is
 an instance of X, here is the standard mitigation" has no X to point at, and a
@@ -115,11 +125,10 @@ That the detector in measurement 1 would have found all fifteen. It would
 not. It detects one shape of several, which is why the young-code findings
 came from reading. The zero in measurement 1 bounds that one shape only.
 
-That every finding was actionable. Two of the fifteen are in code with no
-live disclosure path: one maintainer has already declared the affected
-directory unsupported, and one project has been archived with no security
-policy. Both demonstrate the pattern; neither represents a live risk anyone
-is going to patch.
+That every finding is currently actionable. Two were in code with no live
+disclosure path; another was an unmerged sample PR fixed before reporting;
+deepeval has since changed the three affected verdict schemas. The statuses
+of the remaining projects require separate current-state checks.
 
 ## Reproducing the measurements
 
@@ -127,7 +136,8 @@ Measurements 3 and 4 are checkable in a browser in about ten minutes:
 cwe.mitre.org/data/definitions/693.html for the child list, and the `records/`
 directory of github.com/aveproject/ave for the 81 classes.
 
-Measurement 2 is this repository plus the clean list above.
+Measurement 2 is a historical audit tally, including revisions that have since
+changed. The current state of every project has not been revalidated.
 
 Measurement 1 is the one requiring trust, because the detector behind it is
 not published. It looks for a different shape from the checker in detector/:

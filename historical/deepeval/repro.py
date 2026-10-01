@@ -1,4 +1,4 @@
-"""deepeval: a judge that explains itself is scored as reporting no problem.
+"""Historical deepeval scorer revision; current schemas reject verbose verdicts.
 
 Source: deepeval/metrics/role_violation/role_violation.py:285-295, and the same
 shape in prompt_alignment and conversation_completeness.
@@ -7,8 +7,10 @@ Three metrics declare `verdict: str` rather than Literal["yes","no"], compare
 it with an exact match, and fall through to the permissive branch. `toxicity`,
 `bias` and `hallucination` use Literal and so reject a verbose verdict loudly.
 
-This downloads the real file and executes the shipped `_calculate_score` body
-rather than a retyped copy, so the logic under test is the logic they ship.
+This old script downloads the current `_calculate_score` body but no longer
+reconstructs its imported Verdict enum or the Pydantic schema. It therefore
+fails inconclusive today. It is kept as an audit artifact, not an active case.
+See README.md for the current-state check.
 
 Reported: https://github.com/confident-ai/deepeval/issues/3283
 """

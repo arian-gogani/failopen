@@ -2,7 +2,7 @@
 """Run the reproductions.
 
     python3 run.py            list the cases
-    python3 run.py deepeval   run one
+    python3 run.py openai-approval   run one
     python3 run.py --all      run all of them
 
 Every case prints what it measured and returns whether the defect reproduced.

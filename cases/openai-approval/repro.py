@@ -17,8 +17,9 @@ This downloads the real helper and executes it rather than retyping it.
 Reported: https://github.com/openai/openai-agents-python/issues/5024
 """
 
+import ast
 import asyncio
-import types
+import inspect
 import urllib.request
 
 TITLE = "openai-agents skips tool approval on a misconfigured needs_approval"
@@ -40,11 +41,31 @@ CASES = [
 
 def _load_shipped_helper():
     src = urllib.request.urlopen(SRC, timeout=30).read().decode("utf-8")
-    mod = types.ModuleType("_approvals_shipped")
-    mod.__dict__["UserError"] = type("UserError", (Exception,), {})
-    body = src.replace("from ..exceptions import UserError", "")
-    exec(compile(body, "_approvals.py", "exec"), mod.__dict__)
-    return mod.evaluate_needs_approval_setting
+    tree = ast.parse(src)
+    functions = [
+        node for node in tree.body
+        if isinstance(node, ast.AsyncFunctionDef)
+        and node.name == "evaluate_needs_approval_setting"
+    ]
+    if len(functions) != 1:
+        raise RuntimeError("Could not find exactly one approval helper in upstream source")
+    module = ast.Module(
+        body=[
+            ast.ImportFrom(
+                module="__future__",
+                names=[ast.alias(name="annotations")],
+                level=0,
+            ),
+            functions[0],
+        ],
+        type_ignores=[],
+    )
+    namespace = {
+        "inspect": inspect,
+        "UserError": type("UserError", (Exception,), {}),
+    }
+    exec(compile(ast.fix_missing_locations(module), SRC, "exec"), namespace)
+    return namespace["evaluate_needs_approval_setting"]
 
 
 async def _collect(ev):

@@ -1,6 +1,7 @@
-"""microsoft/autogen: a governance sample executes on any verdict it does not recognise.
+"""Historical initial PR revision only; current PR head blocks unknown verdicts.
 
-Source: python/samples/agentchat_external_governance/main.py, PR #7960.
+Source: python/samples/agentchat_external_governance/main.py,
+PR #7960 at commit 0cd67042ab4bb65653c9ba454f9c3bd60b0829e0.
 
 The sample asks an external governance service whether a high-risk action is
 allowed, then branches on the answer. `deny` blocks, `require_approval` pauses,
@@ -8,13 +9,16 @@ and every other value falls through to execute. `json.loads` returns whatever
 the service sent, so the Literal annotation on the verdict enforces nothing at
 runtime.
 
-Reported: https://github.com/microsoft/autogen/pull/7960
+Fixed in the same PR at ec6cf48c026b1a879ef2063fbe5404482d40c873,
+committed September 14, before the later public issue #8301 was filed.
+This reproduction is archived to preserve the correction, not counted by
+run.py as a current case.
 """
 
 import os
 
-TITLE = "autogen governance sample executes on unrecognised verdicts"
-UPSTREAM = "https://github.com/microsoft/autogen/pull/7960"
+TITLE = "historical AutoGen PR revision, fixed before public issue"
+UPSTREAM = "https://github.com/microsoft/autogen/pull/7960/commits/0cd67042ab4bb65653c9ba454f9c3bd60b0829e0"
 
 
 def governed_export(decision):
